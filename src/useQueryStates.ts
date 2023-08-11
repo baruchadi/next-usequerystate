@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router'
+'use client'
+import { useRouter } from 'next/compat/router'
 import React from 'react'
 import type {
   HistoryOptions,
@@ -63,8 +64,13 @@ export function useQueryStates<KeyMap extends UseQueryStatesKeysMap>(
   // immutable as long as `history` stays the same.
   // It reduces the amount of reactivity needed to update the state.
   const updateUrl = React.useMemo(
-    () => (history === 'push' ? router.push : router.replace),
-    [history]
+    () =>
+      router?.isReady
+        ? history === 'push'
+          ? router?.push
+          : router?.replace
+        : () => Promise.resolve(false),
+    [history, router]
   )
 
   const getValues = React.useCallback((): V => {
@@ -99,7 +105,7 @@ export function useQueryStates<KeyMap extends UseQueryStatesKeysMap>(
   // there is no need to pass it in the dependency array.
   const values = React.useMemo(
     getValues,
-    Object.keys(keys).map(key => router.query[key])
+    Object.keys(keys).map(key => router?.query[key])
   )
 
   const update = React.useCallback<SetValues<KeyMap>>(
@@ -132,7 +138,7 @@ export function useQueryStates<KeyMap extends UseQueryStatesKeysMap>(
       return updateUrl?.call(
         router,
         {
-          pathname: router.pathname,
+          pathname: router?.pathname,
           hash,
           search
         },
