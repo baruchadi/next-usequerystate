@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router'
+'use client'
+import { useRouter } from 'next/compat/router'
 import React from 'react'
 import { HistoryOptions, Serializers, TransitionOptions } from './defs'
 
@@ -210,7 +211,7 @@ export function useQueryState<T = string>(
   // immutable as long as `history` stays the same.
   // It reduces the amount of reactivity needed to update the state.
   const updateUrl = React.useMemo(
-    () => (history === 'push' ? router.push : router.replace),
+    () => (history === 'push' ? router?.push : router?.replace),
     [history]
   )
 
@@ -228,7 +229,7 @@ export function useQueryState<T = string>(
   // Because we're not calling getValue in the function argument
   // of React.useMemo, but instead using it as the function to call,
   // there is no need to pass it in the dependency array.
-  const value = React.useMemo(getValue, [router.query[key]])
+  const value = React.useMemo(getValue, [router?.query[key]])
 
   const update = React.useCallback(
     (
@@ -261,7 +262,7 @@ export function useQueryState<T = string>(
       return updateUrl?.call(
         router,
         {
-          pathname: router.pathname,
+          pathname: router?.pathname,
           hash,
           search
         },
