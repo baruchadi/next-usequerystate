@@ -11,10 +11,6 @@
     "email": "contact@francoisbest.com",
     "url": "https://francoisbest.com"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/47ng/next-usequerystate"
-  },
   "keywords": [
     "nextjs",
     "router",
